@@ -1,4 +1,6 @@
+import { loaderEl } from "../main";
 function fetchPhotoFromAPI(search) {
+  loaderEl.style.display="block"
   const BASE_URL = 'https://pixabay.com/api/';
   const API_KEY = '39362116-97c7d5619fee8bb7db7b12f12';
   const imageType = 'photo';
@@ -19,7 +21,6 @@ function fetchPhotoFromAPI(search) {
         throw new Error(response.statusText)
     }
 
-    console.log(response)
     return response.json()
   })
 }

@@ -13,6 +13,8 @@ const inputEl = formEl.elements.search;
 const gallery = document.querySelector('.gallery');
 const loaderEl = document.querySelector('.loader');
 
+let simplelightbox
+
 formEl.addEventListener('submit', searchHandler);
 function searchHandler(evt) {
 
@@ -23,6 +25,7 @@ function searchHandler(evt) {
     .then(data => {
 
       if (!data.hits.length) {
+
         iziToast.error({
           title: 'Error',
           message:
@@ -33,6 +36,8 @@ function searchHandler(evt) {
       loaderEl.style.display = 'none';
 
       gallery.innerHTML = createMarkup(data.hits);
+      
+      simplelightbox.refresh()
     })
     .catch(error => console.log(error));
 }
@@ -45,7 +50,7 @@ function galleryHandler(evt) {
   }
 
   if (evt.target.classList.contains('gallery-image')) {
-    const simplelightbox = new SimpleLightbox('.gallery-item a', {
+     simplelightbox = new SimpleLightbox('.gallery-item a', {
       captionsData: 'alt',
       captionDelay: 250,
       showCounter: true,

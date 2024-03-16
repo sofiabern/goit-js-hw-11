@@ -13,19 +13,15 @@ const inputEl = formEl.elements.search;
 const gallery = document.querySelector('.gallery');
 const loaderEl = document.querySelector('.loader');
 
-let simplelightbox
-
 formEl.addEventListener('submit', searchHandler);
 function searchHandler(evt) {
-
-  if(gallery.innerHTML) gallery.innerHTML=""
+  if (gallery.innerHTML) gallery.innerHTML = '';
 
   evt.preventDefault();
+
   fetchPhotoFromAPI(inputEl.value)
     .then(data => {
-
       if (!data.hits.length) {
-
         iziToast.error({
           title: 'Error',
           message:
@@ -36,26 +32,15 @@ function searchHandler(evt) {
       loaderEl.style.display = 'none';
 
       gallery.innerHTML = createMarkup(data.hits);
-      
-      simplelightbox.refresh()
+
+      simplelightbox.refresh();
     })
     .catch(error => console.log(error));
 }
-
-gallery.addEventListener('click', galleryHandler);
-function galleryHandler(evt) {
-  // Preventing redirecting
-  if (evt.target.closest('.gallery-link')) {
-    evt.preventDefault();
-  }
-
-  if (evt.target.classList.contains('gallery-image')) {
-     simplelightbox = new SimpleLightbox('.gallery-item a', {
-      captionsData: 'alt',
-      captionDelay: 250,
-      showCounter: true,
-    });
-  }
-}
+let simplelightbox = new SimpleLightbox('.gallery-item a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+  showCounter: true,
+});
 
 export { loaderEl };

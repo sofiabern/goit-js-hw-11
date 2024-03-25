@@ -15,9 +15,22 @@ const loaderEl = document.querySelector('.loader');
 
 formEl.addEventListener('submit', searchHandler);
 function searchHandler(evt) {
+
   if (gallery.innerHTML) gallery.innerHTML = '';
 
+  loaderEl.style.display="block"
+
   evt.preventDefault();
+
+  if(!inputEl.value.trim()){
+    iziToast.error({
+      title: 'Error',
+      message:
+        'Please enter something!',
+    });
+    return
+  }
+
 
   fetchPhotoFromAPI(inputEl.value)
     .then(data => {
@@ -27,20 +40,23 @@ function searchHandler(evt) {
           message:
             'Sorry, there are no images matching your search query. Please try again!',
         });
+        return
       }
-
-      loaderEl.style.display = 'none';
 
       gallery.innerHTML = createMarkup(data.hits);
 
       simplelightbox.refresh();
     })
-    .catch(error => console.log(error));
+    .catch(error => console.log(error))
+    .finally(() =>{
+      loaderEl.style.display = 'none';
+    });
 }
+
 let simplelightbox = new SimpleLightbox('.gallery-item a', {
   captionsData: 'alt',
   captionDelay: 250,
   showCounter: true,
 });
 
-export { loaderEl };
+

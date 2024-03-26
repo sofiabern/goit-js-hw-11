@@ -4,8 +4,11 @@
   box-sizing: border-box;
 }
 
+.hidden {
+display: none;
+}
+
 .loader {
-    display: none;
     position: fixed;
     top: 30%;
     left: 50%;

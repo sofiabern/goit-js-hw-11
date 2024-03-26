@@ -13,50 +13,61 @@ const inputEl = formEl.elements.search;
 const gallery = document.querySelector('.gallery');
 const loaderEl = document.querySelector('.loader');
 
-formEl.addEventListener('submit', searchHandler);
-function searchHandler(evt) {
-
-  if (gallery.innerHTML) gallery.innerHTML = '';
-
-  loaderEl.style.display="block"
-
-  evt.preventDefault();
-
-  if(!inputEl.value.trim()){
-    iziToast.error({
-      title: 'Error',
-      message:
-        'Please enter something!',
-    });
-    return
-  }
-
-
-  fetchPhotoFromAPI(inputEl.value)
-    .then(data => {
-      if (!data.hits.length) {
-        iziToast.error({
-          title: 'Error',
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
-        });
-        return
-      }
-
-      gallery.innerHTML = createMarkup(data.hits);
-
-      simplelightbox.refresh();
-    })
-    .catch(error => console.log(error))
-    .finally(() =>{
-      loaderEl.style.display = 'none';
-    });
-}
-
-let simplelightbox = new SimpleLightbox('.gallery-item a', {
+const simplelightbox = new SimpleLightbox('.gallery-item a', {
   captionsData: 'alt',
   captionDelay: 250,
   showCounter: true,
 });
 
+function loaderToggle() {
+  loaderEl.classList.toggle('hidden');
+}
 
+function cleanGallery() {
+  if (gallery.innerHTML) gallery.innerHTML = '';
+}
+
+function showError(message) {
+  iziToast.error({
+    title: 'Error',
+    message: `${message}`,
+  });
+}
+
+formEl.addEventListener('submit', searchHandler);
+function searchHandler(evt) {
+  evt.preventDefault();
+
+  cleanGallery();
+
+  loaderToggle();
+
+  if (!inputEl.value.trim()) {
+    loaderToggle();
+    showError('Please enter something!');
+    return;
+  }
+
+  fetchPhotoFromAPI(inputEl.value)
+    .then(data => {
+      if (!data.hits.length) {
+        showError('Sorry, there are no images matching your search query. Please try again!')
+        return;
+      }
+
+      gallery.innerHTML = createMarkup(data.hits);
+
+      // Excuting when simplelightbox is not equal to null
+      if (simplelightbox) simplelightbox.refresh();
+    })
+
+    .catch(error => {
+      showError('Sorry, something happened while fetching.')
+  
+      console.log(error);
+    })
+
+    .finally(() => {
+      loaderToggle();
+    });
+}

@@ -16,7 +16,7 @@ const loaderEl = document.querySelector('.loader');
 const simplelightbox = new SimpleLightbox('.gallery-item a', {
   captionsData: 'alt',
   captionDelay: 250,
-  showCounter: true,
+  showCounter: false,
 });
 
 function loaderToggle() {

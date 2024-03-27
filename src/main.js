@@ -57,12 +57,12 @@ function searchHandler(evt) {
 
       gallery.innerHTML = createMarkup(data.hits);
 
-      // Excuting when simplelightbox is not equal to null
+      // Executing when simplelightbox is not equal to null
       if (simplelightbox) simplelightbox.refresh();
     })
 
     .catch(error => {
-      showError('Sorry, something happened while fetching.')
+      showError('Sorry, something wrong happened while fetching.')
   
       console.log(error);
     })
